@@ -1,6 +1,3 @@
-// Imports
-
-
 public interface CITS2200Project {
 	/**
 	 * Adds an edge to the Wikipedia page graph. If the pages do not
@@ -19,9 +16,6 @@ public interface CITS2200Project {
 	 * @param urlTo the URL where the path should end.
 	 * @return the legnth of the shorest path in number of links followed.
 	 */
-
-
-     
 	public int getShortestPath(String urlFrom, String urlTo);
 
 	/**
@@ -32,10 +26,6 @@ public interface CITS2200Project {
 	 * 
 	 * @return an array containing all the URLs that correspond to pages that are centers.
 	 */
-
-
-
-
 	public String[] getCenters();
 
 	/**
@@ -48,11 +38,6 @@ public interface CITS2200Project {
 	 * 
 	 * @return an array containing every strongly connected component.
 	 */
-
-
-
-
-     
 	public String[][] getStronglyConnectedComponents();
 
 	/**
@@ -68,9 +53,4 @@ public interface CITS2200Project {
 	 * @return a Hamiltonian path of the page graph.
 	 */
 	public String[] getHamiltonianPath();
-
-	//Just here for testing ig
-	public static void main(String[] argss) {
-		System.out.println("testingtesting");
-	}
 }
