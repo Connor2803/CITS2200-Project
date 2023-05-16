@@ -1,5 +1,5 @@
 import java.io.*;
-import java.util.*;
+//import java.util.*;
 
 
 public class CITS2200ProjectTester {
@@ -15,6 +15,7 @@ public class CITS2200ProjectTester {
 				System.out.println("Adding edge from " + from + " to " + to);
 				project.addEdge(from, to);
 			}
+			reader.close();
 		} catch (Exception e) {
 			System.out.println("There was a problem:");
 			System.out.println(e.toString());
