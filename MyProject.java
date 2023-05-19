@@ -30,11 +30,11 @@ public class MyProject implements CITS2200Project {
         }
     }
 
-    private void hehehehaw(){
+    private void printGraph() {
         for (Map.Entry<Integer, List<Integer>> entry : adjacencyList.entrySet()) {
             int vertex = entry.getKey();
             List<Integer> neighbors = entry.getValue();
-            
+
             System.out.print(vertex + ": ");
             for (int neighbor : neighbors) {
                 System.out.print(neighbor + " ");
@@ -42,6 +42,21 @@ public class MyProject implements CITS2200Project {
             System.out.println();
         }
     }
+
+    private boolean hasEdge(int fromVertex, int toVertex) {
+        List<Integer> neighbors = adjacencyList.getOrDefault(fromVertex, new ArrayList<>());
+        return neighbors.contains(toVertex);
+    }
+
+    private String getURL(int vertex) {
+        for (Map.Entry<String, Integer> entry : vertexMap.entrySet()) {
+            if (entry.getValue() == vertex) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
 
     public int getShortestPath(String urlFrom, String urlTo) {
         // Implementation here
@@ -89,15 +104,35 @@ public class MyProject implements CITS2200Project {
     }
 
     public String[] getHamiltonianPath() {
-        // Implementation here
+        List<Integer> output = findHamiltonianPath();
+        System.out.println(output);
         return null;
     }
 
-    public static void main(String[] args){
+    private List<Integer> findHamiltonianPath() {
+        return null;
+    }
+    
+  
+
+    public static void main(String[] args) {
         MyProject project = new MyProject();
         CITS2200ProjectTester.loadGraph(project, "example_graph.txt");
-        project.hehehehaw();
-        int shortestpath = project.getShortestPath("/wiki/Flow_network", "/wiki/Dinic%27s_algorithm");
-        System.out.println(shortestpath);
+        project.printGraph();
+        int shortestPath = project.getShortestPath("/wiki/Flow_network", "/wiki/Dinic%27s_algorithm");
+        System.out.println(shortestPath);
+
+        String url0 = project.getURL(0);
+        System.out.println(url0);
+
+        boolean url01 = project.hasEdge(0, 9);
+        System.out.println(url01);
+        /*
+        String[] hamiltonianPath = project.getHamiltonianPath();
+        System.out.println("Hamiltonian Path:");
+        for (String url : hamiltonianPath) {
+            System.out.println(url);
+        }
+        */
     }
 }
