@@ -33,6 +33,24 @@ public class MyProject implements CITS2200Project {
     }
 
     private void printGraph() {
+        Map<Integer, List<Integer>> transposedAdjList = new HashMap<Integer, List<Integer>>();
+        transposedAdjList = getTranspose();
+
+        System.out.println("Adjacency List:");
+        System.out.println();
+        for (Map.Entry<Integer, List<Integer>> entry : transposedAdjList.entrySet()) {
+            int vertex = entry.getKey();
+            List<Integer> neighbors = entry.getValue();
+
+            System.out.print(vertex + ": ");
+            for (int neighbor : neighbors) {
+                System.out.print(neighbor + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+        System.out.println("Adjacency List:");
+        System.out.println();
         for (Map.Entry<Integer, List<Integer>> entry : adjacencyList.entrySet()) {
             int vertex = entry.getKey();
             List<Integer> neighbors = entry.getValue();
@@ -102,7 +120,73 @@ public class MyProject implements CITS2200Project {
 
     public String[][] getStronglyConnectedComponents() {
         // Implementation here
-        return null;
+        boolean[] visited = new boolean[vertexCount];
+        Arrays.fill(visited, false);
+
+        Stack<Integer> stack = new Stack<>();
+        List<Stack<Integer>> stronglyConComps = new ArrayList<>();
+        
+        for (int i = 0 ; i < vertexCount; i++){
+            if (!visited[i]){
+                dfs(i, visited, stack, adjacencyList);
+            }
+        }
+
+        Map<Integer, List<Integer>> transposedAdjList = new HashMap<Integer, List<Integer>>();
+        transposedAdjList = getTranspose();
+        Arrays.fill(visited, false);
+
+        while (!stack.isEmpty()){
+            int current = stack.pop();
+            if (!visited[current]){
+                Stack<Integer> scc = new Stack<>();
+                dfs(current, visited, scc, transposedAdjList);
+                stronglyConComps.add(scc);
+            }
+        }
+
+        String[][] output = new String[stronglyConComps.size()][];
+        int i = 0;
+        for (Stack<Integer> scc : stronglyConComps){
+            List<String> convertedScc = new ArrayList<>();
+            while (!scc.isEmpty()){
+                int current = scc.pop();
+                convertedScc.add(getURL(current));
+            }
+            output[i] = convertedScc.toArray(new String[convertedScc.size()]);
+            i++;
+        }
+
+        return output;
+    }
+
+    private Map<Integer, List<Integer>> getTranspose(){
+        Map<Integer,List<Integer>> transpose = new HashMap<Integer,List<Integer>>();
+        for (int u : adjacencyList.keySet()) {
+            for (int v : adjacencyList.get(u)) {
+                List<Integer> newValues = transpose.get(v);
+                if (newValues == null) {
+                    transpose.put(v, newValues = new ArrayList<Integer>());
+                }
+                newValues.add(u);
+            }
+        }
+        return transpose;
+    }
+
+    private void dfs(int vertex, boolean[] visited, Stack<Integer> stack, Map<Integer, List<Integer>> inputMap){
+        visited[vertex] = true;
+
+        try{
+            for (int u : inputMap.get(vertex)){
+                if (!visited[u]){
+                    dfs(u, visited, stack, inputMap);
+                }
+            }
+        }
+        catch (NullPointerException e){
+        }
+        stack.push(vertex);
     }
 
     public String[] getHamiltonianPath() {
@@ -123,13 +207,26 @@ public class MyProject implements CITS2200Project {
         project.printGraph();
         int shortestPath = project.getShortestPath("/wiki/Flow_network", "/wiki/Dinic%27s_algorithm");
         System.out.println(shortestPath);
+        System.out.println();
+ 
+        String[][] stronglyConnComps = project.getStronglyConnectedComponents();
+        int count = 0;
+        for (String[] scc : stronglyConnComps){
+            System.out.println("Scc " + count + ":");
+            for (String vertex: scc){
+                System.out.println(" " + vertex);
+            }
+            System.out.println();
+            count++;
+        }
 
-        String url0 = project.getURL(0);
+
+        /*String url0 = project.getURL(0);
         System.out.println(url0);
 
         boolean url01 = project.hasEdge(0, 9);
         System.out.println(url01);
-        /*
+        
         String[] hamiltonianPath = project.getHamiltonianPath();
         System.out.println("Hamiltonian Path:");
         for (String url : hamiltonianPath) {
