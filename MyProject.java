@@ -1,5 +1,7 @@
 import java.util.*;
 
+// Created by Connor Grayden (23349066) and Nathan Buluran ()
+
 public class MyProject implements CITS2200Project {
     private Map<Integer, List<Integer>> adjacencyList;
     private Map<String, Integer> vertexMap;
