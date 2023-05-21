@@ -6,6 +6,27 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CITS2200_Performance_Checker",
+            "request": "launch",
+            "mainClass": "CITS2200_Performance_Checker",
+            "projectName": "CITS2200-Project_bb55553b"
+        },
+        {
+            "type": "java",
+            "name": "CITS2200ProjectTester",
+            "request": "launch",
+            "mainClass": "CITS2200ProjectTester",
+            "projectName": "CITS2200-Project_bb55553b"
+        },
+        {
+            "type": "java",
+            "name": "size_test",
+            "request": "launch",
+            "mainClass": "size_test",
+            "projectName": "CITS2200-Project_bb55553b"
+        },
+        {
+            "type": "java",
             "name": "MyProject",
             "request": "launch",
             "mainClass": "MyProject",

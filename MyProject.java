@@ -20,6 +20,7 @@ public class MyProject implements CITS2200Project {
         List<Integer> neighbours = adjacencyList.getOrDefault(fromVertex, new ArrayList<>());
         neighbours.add(toVertex);
         adjacencyList.put(fromVertex, neighbours);
+        adjacencyList.putIfAbsent(toVertex, new ArrayList<>());
     }
 
     private int getVertex(String url) {
@@ -36,7 +37,7 @@ public class MyProject implements CITS2200Project {
         Map<Integer, List<Integer>> transposedAdjList = new HashMap<Integer, List<Integer>>();
         transposedAdjList = getTranspose();
 
-        System.out.println("Adjacency List:");
+        System.out.println("Transposed Adjacency List:");
         System.out.println();
         for (Map.Entry<Integer, List<Integer>> entry : transposedAdjList.entrySet()) {
             int vertex = entry.getKey();
@@ -195,18 +196,23 @@ public class MyProject implements CITS2200Project {
         int[] visited = new int[vertexCount]; // Array to track visited vertices
         List<Integer> path = new ArrayList<>(); // List to store the path
     
-        // Start the backtracking from the first vertex
-        if (findHamiltonianPath(0, visited, path)) {
-            // Convert the path list to an array of strings
-            String[] hamiltonianPath = new String[path.size()];
-            for (int i = 0; i < path.size(); i++) {
-                int vertex = path.get(i);
-                hamiltonianPath[i] = getURL(vertex);
+        // Try to start the backtracking from every vertex
+        for(int hamStart = 0;hamStart < vertexCount;hamStart++){
+            //System.out.println("in here");
+            if (findHamiltonianPath(hamStart, visited, path)) {
+                //System.out.println("hello");
+                // Convert the path list to an array of strings
+                String[] hamiltonianPath = new String[path.size()];
+                for (int i = 0; i < path.size(); i++) {
+                    int vertex = path.get(i);
+                    hamiltonianPath[i] = getURL(vertex);
+                }
+                return hamiltonianPath;
+            } else {
+                continue;
             }
-            return hamiltonianPath;
-        } else {
-            return null; // No Hamiltonian path found
         }
+        return new String[0]; // No Hamiltonian path found for any start vertex
     }
     
     private boolean findHamiltonianPath(int currentVertex, int[] visited, List<Integer> path) {
@@ -240,7 +246,15 @@ public class MyProject implements CITS2200Project {
     public static void main(String[] args) {
         MyProject project = new MyProject();
         CITS2200ProjectTester.loadGraph(project, "testdata/example_graph.txt");
+        
+        // If you don't want to see the adjacency list comment this out
         project.printGraph();
+
+        for(int i = 0;i < 10;i++){
+            String x = project.getURL(i);
+            System.out.println(x);
+        }
+
         int shortestPath = project.getShortestPath("/wiki/Flow_network", "/wiki/Dinic%27s_algorithm");
         if (shortestPath != -1){
             System.out.println("Shortest Path: " + shortestPath);
@@ -264,7 +278,7 @@ public class MyProject implements CITS2200Project {
 
 
         String[] hamiltonianPath = project.getHamiltonianPath();
-        if (hamiltonianPath != null){
+        if (hamiltonianPath.length != 0){
             System.out.print("Hamiltonian Path: [");
             for (String url : hamiltonianPath) {
                 System.out.print(url+",");

@@ -72,7 +72,7 @@
              // Measure the execution time for each method
              long startTime, endTime, executionTime;
  
-             /* 
+             
              System.out.println("-----------------------------------------------------------");
              System.out.println("Results for graph with " + num_vertices + " vertices");
              System.out.println("-----------------------------------------------------------");
@@ -82,7 +82,7 @@
              endTime = System.nanoTime();
              executionTime = endTime - startTime;
              System.out.println("getShortestPath() execution time: " + executionTime + " nanoseconds");
-             */
+             
              // 2. Measure getHamiltonianPath() execution time
              if (num_vertices < 20) {
                  startTime = System.nanoTime();
@@ -94,7 +94,7 @@
              } else {
                  System.out.println("Not testing getHamiltonianPath() as too many vertices");
              }
-             /* 
+            
              // 3. Measure getStronglyConnectedComponents() execution time
              startTime = System.nanoTime();
              graphs[i].getStronglyConnectedComponents();
@@ -109,7 +109,7 @@
              executionTime = endTime - startTime;
              System.out.println("getCenters() execution time for graph size: " + executionTime + " nanoseconds");
              System.out.println(); 
-             */
+            
  
          }
      }
