@@ -190,14 +190,10 @@ public class MyProject implements CITS2200Project {
     }
 
     public String[] getHamiltonianPath() {
-        List<Integer> output = findHamiltonianPath();
-        System.out.println(output);
+
         return null;
     }
 
-    private List<Integer> findHamiltonianPath() {
-        return null;
-    }
     
   
 
