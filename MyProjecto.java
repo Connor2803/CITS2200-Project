@@ -152,23 +152,21 @@ public class MyProjecto implements CITS2200Project {
 
     public static void main(String[] args) {
         MyProjecto project = new MyProjecto();
-        CITS2200ProjectTester.loadGraph(project, "alex.txt");
+        CITS2200ProjectTester.loadGraph(project, "testdata/alex.txt");
         project.printGraph();
         int shortestPath = project.getShortestPath("/wiki/Flow_network", "/wiki/Dinic%27s_algorithm");
-        System.out.println(shortestPath);
+        System.out.println("Shortest Path: " + shortestPath);
 
-        String url0 = project.getURL(0);
-        System.out.println(url0);
-
-        boolean url01 = project.hasEdge(0, 9);
-        System.out.println(url01);
+        boolean x = project.hasEdge(0, 0);
+        System.out.println(x);
 
         String[] hamiltonianPath = project.getHamiltonianPath();
         if (hamiltonianPath != null){
-            System.out.println("Hamiltonian Path:");
+            System.out.print("Hamiltonian Path: [");
             for (String url : hamiltonianPath) {
-                System.out.println(url);
+                System.out.print(url+",");
             }
+            System.out.print("]");
         }
         else System.out.println("No Hamiltonian Path");
         

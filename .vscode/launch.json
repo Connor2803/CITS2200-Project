@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "MyProject",
+            "request": "launch",
+            "mainClass": "MyProject",
+            "projectName": "CITS2200-Project_bb55553b"
+        },
+        {
+            "type": "java",
             "name": "MyProjecto",
             "request": "launch",
             "mainClass": "MyProjecto",

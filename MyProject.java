@@ -63,10 +63,12 @@ public class MyProject implements CITS2200Project {
         }
     }
 
+    /*
     private boolean hasEdge(int fromVertex, int toVertex) {
         List<Integer> neighbors = adjacencyList.getOrDefault(fromVertex, new ArrayList<>());
         return neighbors.contains(toVertex);
     }
+    */
 
     private String getURL(int vertex) {
         for (Map.Entry<String, Integer> entry : vertexMap.entrySet()) {
@@ -190,8 +192,46 @@ public class MyProject implements CITS2200Project {
     }
 
     public String[] getHamiltonianPath() {
+        int[] visited = new int[vertexCount]; // Array to track visited vertices
+        List<Integer> path = new ArrayList<>(); // List to store the path
+    
+        // Start the backtracking from the first vertex
+        if (findHamiltonianPath(0, visited, path)) {
+            // Convert the path list to an array of strings
+            String[] hamiltonianPath = new String[path.size()];
+            for (int i = 0; i < path.size(); i++) {
+                int vertex = path.get(i);
+                hamiltonianPath[i] = getURL(vertex);
+            }
+            return hamiltonianPath;
+        } else {
+            return null; // No Hamiltonian path found
+        }
+    }
+    
+    private boolean findHamiltonianPath(int currentVertex, int[] visited, List<Integer> path) {
+        visited[currentVertex] = 1; // Mark the current vertex as visited
+        path.add(currentVertex); // Add the current vertex to the path
+    
+        if (path.size() == vertexCount) {
+            return true; // All vertices have been visited, Hamiltonian path found
+        }
+        
+        // try get the neighbors if no neighbours set -1 or smth to say it has no neighbirs
 
-        return null;
+        List<Integer> neighbors = adjacencyList.getOrDefault(currentVertex, new ArrayList<>());
+        for (int neighbor : neighbors) {
+            if (visited[neighbor] == 0) { // Neighbor is not visited
+                if (findHamiltonianPath(neighbor, visited, path)) {
+                    return true; // Hamiltonian path found
+                }
+            }
+        }
+    
+        visited[currentVertex] = 0; // Backtrack: mark the current vertex as not visited
+        path.remove(path.size() - 1); // Backtrack: remove the current vertex from the path
+    
+        return false; // No Hamiltonian path found from the current vertex
     }
 
     
@@ -199,10 +239,16 @@ public class MyProject implements CITS2200Project {
 
     public static void main(String[] args) {
         MyProject project = new MyProject();
-        CITS2200ProjectTester.loadGraph(project, "example_graph.txt");
+        CITS2200ProjectTester.loadGraph(project, "testdata/example_graph.txt");
         project.printGraph();
         int shortestPath = project.getShortestPath("/wiki/Flow_network", "/wiki/Dinic%27s_algorithm");
-        System.out.println(shortestPath);
+        if (shortestPath != -1){
+            System.out.println("Shortest Path: " + shortestPath);
+        }
+        else{
+            System.out.println("No Shortest Path");
+        }
+        
         System.out.println();
  
         String[][] stronglyConnComps = project.getStronglyConnectedComponents();
@@ -217,17 +263,14 @@ public class MyProject implements CITS2200Project {
         }
 
 
-        /*String url0 = project.getURL(0);
-        System.out.println(url0);
-
-        boolean url01 = project.hasEdge(0, 9);
-        System.out.println(url01);
-        
         String[] hamiltonianPath = project.getHamiltonianPath();
-        System.out.println("Hamiltonian Path:");
-        for (String url : hamiltonianPath) {
-            System.out.println(url);
+        if (hamiltonianPath != null){
+            System.out.print("Hamiltonian Path: [");
+            for (String url : hamiltonianPath) {
+                System.out.print(url+",");
+            }
+            System.out.print("]");
         }
-        */
+        else System.out.println("No Hamiltonian Path");
     }
 }
