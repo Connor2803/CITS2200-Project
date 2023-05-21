@@ -1,5 +1,7 @@
 import java.util.*;
 
+import javax.lang.model.util.ElementFilter;
+
 // Created by Connor Grayden (23349066) and Nathan Buluran ()
 
 public class MyProject implements CITS2200Project {
@@ -33,24 +35,7 @@ public class MyProject implements CITS2200Project {
     }
 
     private void printGraph() {
-        Map<Integer, List<Integer>> transposedAdjList = new HashMap<Integer, List<Integer>>();
-        transposedAdjList = getTranspose();
-
         System.out.println("Adjacency List:");
-        System.out.println();
-        for (Map.Entry<Integer, List<Integer>> entry : transposedAdjList.entrySet()) {
-            int vertex = entry.getKey();
-            List<Integer> neighbors = entry.getValue();
-
-            System.out.print(vertex + ": ");
-            for (int neighbor : neighbors) {
-                System.out.print(neighbor + " ");
-            }
-            System.out.println();
-        }
-        System.out.println();
-        System.out.println("Adjacency List:");
-        System.out.println();
         for (Map.Entry<Integer, List<Integer>> entry : adjacencyList.entrySet()) {
             int vertex = entry.getKey();
             List<Integer> neighbors = entry.getValue();
@@ -115,38 +100,116 @@ public class MyProject implements CITS2200Project {
 
     public String[] getCenters() {
         // Implementation here
-        return null;
+        List<Integer> centers = new ArrayList<>();
+        int minMaxPath = Integer.MAX_VALUE;
+
+        for (int i = 0; i < vertexCount; i++){
+            int [] currentArray = getDistances(i);
+            
+            //sets currentMaxPath to the max path from the vertex i to any other vertex
+            int currentMaxPath = Arrays.stream(currentArray).max().getAsInt();
+
+            //if the max path of i is smaller than the current minimum maximum path then clear the centers and set i as the center
+            //also filters out vertexes with no outward paths i.e. a vertex with 0 as the max path
+            if (currentMaxPath < minMaxPath && currentMaxPath!=0){
+                centers.clear();
+                centers.add(i);
+            }
+            //adds vertex to centers if max path is equal to the current minimum max path
+            else if (currentMaxPath == minMaxPath){
+                centers.add(i);
+            }
+        }
+
+        //converts from int to URL
+        String[] output = new String[centers.size()];
+        for (int i = 0; i < centers.size(); i++){
+            output[i] = getURL(centers.get(i));
+        }
+        return output;
+    }
+
+    //outputs the distance from the startVertex to all other vertexes
+    private int[] getDistances(int startVertex){
+        //initialises and sets all elements to be -1 in distances
+        int[] distances = new int[vertexCount];
+        Arrays.fill(distances, -1);
+
+        //initialises and sets all elements to be false in visited
+        boolean[] visited = new boolean[vertexCount];
+        Arrays.fill(visited, false);
+
+        //initialises queue and adds the starting vertex to queue
+        Queue<Integer> q = new LinkedList<>();
+        q.add(startVertex);
+
+        //currDistance will be used to keep track of how many links are between the current vertex and the starting vertex
+        int currDistance = 0;
+        distances[startVertex] = currDistance;
+
+        //iterates throught queue until empty
+        while (!q.isEmpty()){
+            //poll the front of the queue and set the current distance to the distance of the vertex from the startVertex
+            int current = q.poll();
+            currDistance = distances[current];
+            //catches null pointer exceptions since vertexes with no outward edges are not represeneted in adjacencyList
+            try{
+                for (int i : adjacencyList.get(current)){
+                    //visits neighbours if they have not been visted and assigns them a distance from the start vertex and adds them to the queue
+                    if (!visited[i]){
+                        distances[i] = currDistance + 1;
+                        q.add(i);
+                        visited[i] = true;
+                    }
+                }
+            }
+            catch (NullPointerException e){}
+        }
+
+        return distances;
     }
 
     public String[][] getStronglyConnectedComponents() {
         // Implementation here
+        //initialises and sets all elements to be false in visited
         boolean[] visited = new boolean[vertexCount];
         Arrays.fill(visited, false);
 
+        //initialises stack to store vertexs in during dfs and initialise an array list to store our strongly connected components in
         Stack<Integer> stack = new Stack<>();
         List<Stack<Integer>> stronglyConComps = new ArrayList<>();
         
+        //performs dfs, utilises for loop in case of any vertexes with no inward edges so therefore has to be manually visited
         for (int i = 0 ; i < vertexCount; i++){
             if (!visited[i]){
                 dfs(i, visited, stack, adjacencyList);
             }
         }
 
+        //the graph is transposed witout mutating the adjacency list
         Map<Integer, List<Integer>> transposedAdjList = new HashMap<Integer, List<Integer>>();
         transposedAdjList = getTranspose();
+
+        //resets visited
         Arrays.fill(visited, false);
 
+        //iterates through stack allowing manual jump between strongly connect components 
         while (!stack.isEmpty()){
             int current = stack.pop();
             if (!visited[current]){
+                //vertexes that dfs can access in the transposed adjacency list are part of a strongly connect component
                 Stack<Integer> scc = new Stack<>();
                 dfs(current, visited, scc, transposedAdjList);
+                //adds the stack of scc's from dfs to strongConComps
                 stronglyConComps.add(scc);
             }
         }
 
+        //converts integers and the stack to our output type of String[][]
         String[][] output = new String[stronglyConComps.size()][];
+        //counter for seperating each scc for the array
         int i = 0;
+        //iterates through each stack in the array and converts them from int to String representations of the links
         for (Stack<Integer> scc : stronglyConComps){
             List<String> convertedScc = new ArrayList<>();
             while (!scc.isEmpty()){
@@ -160,25 +223,33 @@ public class MyProject implements CITS2200Project {
         return output;
     }
 
+    //transposes graph
     private Map<Integer, List<Integer>> getTranspose(){
         Map<Integer,List<Integer>> transpose = new HashMap<Integer,List<Integer>>();
         for (int u : adjacencyList.keySet()) {
             for (int v : adjacencyList.get(u)) {
+                //initialises new values for each of v where v are u's neighbours
                 List<Integer> newValues = transpose.get(v);
+                //constructs an array list as the value for the hashmap in transposed adjacency list if no array list already
                 if (newValues == null) {
                     transpose.put(v, newValues = new ArrayList<Integer>());
                 }
+                //adds the vertex u which was formerly an inward connection to u's values this becoming an outward connection thereby tranposing
                 newValues.add(u);
             }
         }
         return transpose;
     }
 
+    //recursive dfs for getStronglyConnectedComponents()
     private void dfs(int vertex, boolean[] visited, Stack<Integer> stack, Map<Integer, List<Integer>> inputMap){
+        //sets input vertex as true
         visited[vertex] = true;
 
+        //catches null pointer exceptions since vertexes with no outward edges are not represeneted in adjacencyList
         try{
             for (int u : inputMap.get(vertex)){
+                //recursively calls dfs if vertex u has not been visited
                 if (!visited[u]){
                     dfs(u, visited, stack, inputMap);
                 }
@@ -186,6 +257,7 @@ public class MyProject implements CITS2200Project {
         }
         catch (NullPointerException e){
         }
+        //pushes vertex to the top of the stack
         stack.push(vertex);
     }
 
@@ -209,7 +281,7 @@ public class MyProject implements CITS2200Project {
         System.out.println(shortestPath);
         System.out.println();
  
-        String[][] stronglyConnComps = project.getStronglyConnectedComponents();
+        /*String[][] stronglyConnComps = project.getStronglyConnectedComponents();
         int count = 0;
         for (String[] scc : stronglyConnComps){
             System.out.println("Scc " + count + ":");
@@ -218,6 +290,12 @@ public class MyProject implements CITS2200Project {
             }
             System.out.println();
             count++;
+        }
+        */
+
+        String[] central = project.getCenters();
+        for (String vertex : central){
+            System.out.println(vertex);
         }
 
 
