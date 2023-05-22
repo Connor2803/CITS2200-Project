@@ -6,6 +6,48 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ExampleCITS2200Project",
+            "request": "launch",
+            "mainClass": "ExampleCITS2200Project",
+            "projectName": "CITS2200-Project_bb55553b"
+        },
+        {
+            "type": "java",
+            "name": "CITS2200_Performance_Checker",
+            "request": "launch",
+            "mainClass": "CITS2200_Performance_Checker",
+            "projectName": "CITS2200-Project_bb55553b"
+        },
+        {
+            "type": "java",
+            "name": "CITS2200ProjectTester",
+            "request": "launch",
+            "mainClass": "CITS2200ProjectTester",
+            "projectName": "CITS2200-Project_bb55553b"
+        },
+        {
+            "type": "java",
+            "name": "size_test",
+            "request": "launch",
+            "mainClass": "size_test",
+            "projectName": "CITS2200-Project_bb55553b"
+        },
+        {
+            "type": "java",
+            "name": "MyProject",
+            "request": "launch",
+            "mainClass": "MyProject",
+            "projectName": "CITS2200-Project_bb55553b"
+        },
+        {
+            "type": "java",
+            "name": "MyProjecto",
+            "request": "launch",
+            "mainClass": "MyProjecto",
+            "projectName": "CITS2200-Project_bb55553b"
+        },
+        {
+            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"
