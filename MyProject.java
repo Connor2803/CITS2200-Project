@@ -33,44 +33,6 @@ public class MyProject implements CITS2200Project {
         }
     }
 
-    private void printGraph() {
-        Map<Integer, List<Integer>> transposedAdjList = new HashMap<Integer, List<Integer>>();
-        transposedAdjList = getTranspose();
-
-        System.out.println("Transposed Adjacency List:");
-        System.out.println();
-        for (Map.Entry<Integer, List<Integer>> entry : transposedAdjList.entrySet()) {
-            int vertex = entry.getKey();
-            List<Integer> neighbors = entry.getValue();
-
-            System.out.print(vertex + ": ");
-            for (int neighbor : neighbors) {
-                System.out.print(neighbor + " ");
-            }
-            System.out.println();
-        }
-        System.out.println();
-        System.out.println("Adjacency List:");
-        System.out.println();
-        for (Map.Entry<Integer, List<Integer>> entry : adjacencyList.entrySet()) {
-            int vertex = entry.getKey();
-            List<Integer> neighbors = entry.getValue();
-
-            System.out.print(vertex + ": ");
-            for (int neighbor : neighbors) {
-                System.out.print(neighbor + " ");
-            }
-            System.out.println();
-        }
-    }
-
-    /*
-    private boolean hasEdge(int fromVertex, int toVertex) {
-        List<Integer> neighbors = adjacencyList.getOrDefault(fromVertex, new ArrayList<>());
-        return neighbors.contains(toVertex);
-    }
-    */
-
     private String getURL(int vertex) {
         for (Map.Entry<String, Integer> entry : vertexMap.entrySet()) {
             if (entry.getValue() == vertex) {
@@ -285,9 +247,7 @@ public class MyProject implements CITS2200Project {
     
         // Try to start the backtracking from every vertex
         for(int hamStart = 0;hamStart < vertexCount;hamStart++){
-            //System.out.println("in here");
             if (findHamiltonianPath(hamStart, visited, path)) {
-                //System.out.println("hello");
                 // Convert the path list to an array of strings
                 String[] hamiltonianPath = new String[path.size()];
                 for (int i = 0; i < path.size(); i++) {
@@ -325,59 +285,5 @@ public class MyProject implements CITS2200Project {
         path.remove(path.size() - 1); // Backtrack: remove the current vertex from the path
     
         return false; // No Hamiltonian path found from the current vertex
-    }
-
-    
-  
-
-    public static void main(String[] args) {
-        MyProject project = new MyProject();
-        CITS2200ProjectTester.loadGraph(project, "testdata/example_graph.txt");
-        
-        // If you don't want to see the adjacency list comment this out
-        project.printGraph();
-
-        for(int i = 0;i < 10;i++){
-            String x = project.getURL(i);
-            System.out.println(x);
-        }
-
-        int shortestPath = project.getShortestPath("/wiki/Flow_network", "/wiki/Dinic%27s_algorithm");
-        if (shortestPath != -1){
-            System.out.println("Shortest Path: " + shortestPath);
-        }
-        else{
-            System.out.println("No Shortest Path");
-        }
-        
-        System.out.println();
- 
-        /*String[][] stronglyConnComps = project.getStronglyConnectedComponents();
-        int count = 0;
-        for (String[] scc : stronglyConnComps){
-            System.out.println("Scc " + count + ":");
-            for (String vertex: scc){
-                System.out.println(" " + vertex);
-            }
-            System.out.println();
-            count++;
-        }
-        */
-
-        String[] central = project.getCenters();
-        for (String vertex : central){
-            System.out.println(vertex);
-        }
-
-
-        String[] hamiltonianPath = project.getHamiltonianPath();
-        if (hamiltonianPath.length != 0){
-            System.out.print("Hamiltonian Path: [");
-            for (String url : hamiltonianPath) {
-                System.out.print(url+",");
-            }
-            System.out.print("]");
-        }
-        else System.out.println("No Hamiltonian Path");
     }
 }
