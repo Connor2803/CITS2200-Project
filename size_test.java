@@ -40,7 +40,7 @@
               * IMPORTANT: Change MyCITS2200Project to whatever your class is called
               * 
               */
-             graphs[i] = new MyProjecto();
+             graphs[i] = new MyProject();
              /*
               * ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
               */

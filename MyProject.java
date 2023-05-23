@@ -91,7 +91,8 @@ public class MyProject implements CITS2200Project {
 
             //if the max path of i is smaller than the current minimum maximum path then clear the centers and set i as the center
             //also filters out vertexes with no outward paths i.e. a vertex with 0 as the max path
-            if (currentMaxPath < minMaxPath && currentMaxPath!=0){
+            if (currentMaxPath < minMaxPath && currentMaxPath > 0){
+                minMaxPath = currentMaxPath;
                 centers.clear();
                 centers.add(i);
             }
