@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "graph_test",
+            "request": "launch",
+            "mainClass": "graph_test",
+            "projectName": "CITS2200-Project_bb55553b"
+        },
+        {
+            "type": "java",
             "name": "ExampleCITS2200Project",
             "request": "launch",
             "mainClass": "ExampleCITS2200Project",

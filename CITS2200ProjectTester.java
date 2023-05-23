@@ -24,12 +24,16 @@ public class CITS2200ProjectTester {
 
 	public static void main(String[] args) {
 		// Change this to be the path to the graph file.
-		String pathToGraphFile = "example_graph.txt";
+		String pathToGraphFile = "testdata/example_graph.txt";
 		// Create an instance of your implementation.
-		CITS2200Project proj = new MyProject();
+		MyProject proj = new MyProject();
 		// Load the graph into the project.
 		loadGraph(proj, pathToGraphFile);
 
 		// Write your own tests!
+		String[] cen = proj.getCenters();
+		for (String i : cen){
+			System.out.println(i);
+		}	
 	}
 }
